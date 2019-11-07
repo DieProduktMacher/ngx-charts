@@ -160,6 +160,132 @@ export const multi: MultiSeries = [
   }
 ];
 
+export const multiRidge: MultiSeries = [
+  {    
+    name: 'Condition No. 1',
+    series: [
+      {
+        value: 2,
+        name: '0'
+      },
+      {
+        value: 8,
+        name: '5'
+      },
+      {
+        value: 23,
+        name: '10'
+      },
+      {
+        value: 35,
+        name: '15'
+      },
+      {
+        value: 53,
+        name: '20'
+      },
+      {
+        value: 75,
+        name: '25'
+      },
+      {
+        value: 34,
+        name: '30'
+      },
+      {
+        value: 7,
+        name: '35'
+      },
+      {
+        value: 2,
+        name: '40'
+      }
+    ]
+  },
+  {
+    name: 'Condition No. 2',
+    series: [
+      {
+        value: 1,
+        name: '0'
+      },
+      {
+        value: 5,
+        name: '5'
+      },
+      {
+        value: 12,
+        name: '10'
+      },
+      {
+        value: 25,
+        name: '15'
+      },
+      {
+        value: 95,
+        name: '20'
+      },
+      {
+        value: 64,
+        name: '25'
+      },
+      {
+        value: 20,
+        name: '30'
+      },
+      {
+        value: 2,
+        name: '35'
+      },
+      {
+        value: 1,
+        name: '40'
+      }
+    ]
+  },
+  {
+    name: 'Condition No. 3',
+    series: [
+      {
+        value: 4,
+        name: '0'
+      },
+      {
+        value: 2,
+        name: '5'
+      },
+      {
+        value: 28,
+        name: '10'
+      },
+      {
+        value: 86,
+        name: '15'
+      },
+      {
+        value: 67,
+        name: '20'
+      },
+      {
+        value: 35,
+        name: '25'
+      },
+      {
+        value: 12,
+        name: '30'
+      },
+      {
+        value: 5,
+        name: '35'
+      },
+      {
+        value: 0,
+        name: '40'
+      }
+    ]
+  }
+];
+
 export const fiscalYearReport: MultiSeries = [
   {
     name: 'Q1',

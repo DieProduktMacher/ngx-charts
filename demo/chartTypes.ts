@@ -475,6 +475,46 @@ const chartGroups = [
         }
       },
       {
+        name: 'Area Ridge Chart',
+        selector: 'area-chart-ridge',
+        inputFormat: 'multiSeries',
+        options: [
+          'animations',
+          'colorScheme',
+          'schemeType',
+          'showXAxis',
+          'showYAxis',
+          'gradient',
+          'showLegend',
+          'legendTitle',
+          'legendPosition',
+          'showXAxisLabel',
+          'xAxisLabel',
+          'showYAxisLabel',
+          'yAxisLabel',
+          'autoScale',
+          'timeline',
+          'showGridLines',
+          'curve',
+          'roundDomains',
+          'tooltipDisabled',
+          'xScaleMin',
+          'xScaleMax',
+          'yScaleMin',
+          'yScaleMax',
+          'trimXAxisTicks',
+          'trimYAxisTicks',
+          'rotateXAxisTicks',
+          'maxXAxisTickLength',
+          'maxYAxisTickLength'
+        ],
+        defaults: {
+          yAxisLabel: 'GDP Per Capita',
+          xAxisLabel: 'Census Date',
+          linearScale: true
+        }
+      },
+      {
         name: 'Stacked Area Chart',
         selector: 'area-chart-stacked',
         inputFormat: 'multiSeries',

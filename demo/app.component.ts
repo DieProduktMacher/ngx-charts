@@ -10,6 +10,7 @@ import { formatLabel, escapeLabel } from '../src/common/label.helper';
 import {
   single,
   multi,
+  multiRidge,
   bubble,
   generateData,
   generateGraph,
@@ -172,6 +173,7 @@ export class AppComponent implements OnInit {
   // line, area
   autoScale = true;
   timeline = false;
+  multiRidge: any[] = multiRidge;
 
   // margin
   margin: boolean = false;
