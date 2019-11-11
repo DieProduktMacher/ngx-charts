@@ -150,6 +150,10 @@ export class YAxisTicksComponent implements OnChanges, AfterViewInit {
 
     if (this.tickFormatting) {
       this.tickFormat = this.tickFormatting;
+    } else if (scale.tickFormat && this.tickArguments === undefined){
+      this.tickFormat = function(d) {
+        return d.toLocaleString();
+      };
     } else if (scale.tickFormat) {
       this.tickFormat = scale.tickFormat.apply(scale, this.tickArguments);
     } else {
@@ -191,9 +195,12 @@ export class YAxisTicksComponent implements OnChanges, AfterViewInit {
         this.dy = sign < 0 ? '0em' : '.71em';
         break;
       case 'left':
+        
         this.transform = function(tick) {
+          // console.log('Tick to transform: ', tick);
           return 'translate(0,' + this.adjustedScale(tick) + ')';
         };
+        
         this.textAnchor = 'end';
         this.x2 = this.innerTickSize * -sign;
         this.x1 = this.tickSpacing * -sign;

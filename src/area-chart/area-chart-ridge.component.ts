@@ -9,7 +9,7 @@ import {
   ContentChild,
   TemplateRef
 } from '@angular/core';
-import { scaleLinear, scalePoint, scaleTime } from 'd3-scale';
+import { scaleLinear, scalePoint, scaleTime, scaleOrdinal, scaleQuantize } from 'd3-scale';
 import { curveLinear } from 'd3-shape';
 
 import { calculateViewDimensions, ViewDimensions } from '../common/view-dimensions.helper';
@@ -51,15 +51,15 @@ import { getUniqueXDomainValues, getScaleType } from '../common/domain.helper';
         <svg:g
           ngx-charts-y-axis
           *ngIf="yAxis"
-          [yScale]="yScale"
+          [yScale]="yScaleCustom"
           [dims]="dims"
-          [showGridLines]="showGridLines"
+          [showGridLines]="false"
           [showLabel]="showYAxisLabel"
           [labelText]="yAxisLabel"
           [trimTicks]="trimYAxisTicks"
           [maxTickLength]="maxYAxisTickLength"
           [tickFormatting]="yAxisTickFormatting"
-          [ticks]="yAxisTicks"
+          [ticks]="yAxisTicksCustom"
           (dimensionsChanged)="updateYAxisWidth($event)"
         ></svg:g>
 
@@ -137,6 +137,8 @@ export class AreaChartRidgeComponent extends BaseChartComponent {
   seriesDomain: any;
   xScale: any;
   yScale: any;
+  yScaleCustom: any;
+  yScaleCategories: any;
   transform: string;
   transformEach: string;
   colors: ColorHelper;
@@ -148,6 +150,7 @@ export class AreaChartRidgeComponent extends BaseChartComponent {
   hoveredVertical: any; // the value of the x axis that is hovered over
   xAxisHeight: number = 0;
   yAxisWidth: number = 0;
+  yAxisTicksCustom: any;
   filteredDomain: any;
   legendOptions: any;
 
@@ -191,6 +194,9 @@ export class AreaChartRidgeComponent extends BaseChartComponent {
 
     this.xScale = this.getXScale(this.xDomain, this.dims.width);
     this.yScale = this.getYScale(this.yDomain, this.dims.height / this.seriesDomain.length*1.6);
+    this.yScaleCustom = this.getCustomYScale(this.seriesDomain, this.dims.height);
+    this.yScaleCategories = this.getYScale(this.seriesDomain, this.dims.height);
+    this.yAxisTicksCustom = this.seriesDomain;
 
     this.updateTimeline();
 
@@ -222,6 +228,7 @@ export class AreaChartRidgeComponent extends BaseChartComponent {
   getXDomain(): any[] {
     let values = getUniqueXDomainValues(this.results);
 
+    
     this.scaleType = getScaleType(values);
     let domain = [];
 
@@ -308,7 +315,20 @@ export class AreaChartRidgeComponent extends BaseChartComponent {
     const scale = scaleLinear()
       .range([height, 0])
       .domain(domain);
+    
     return this.roundDomains ? scale.nice() : scale;
+  }
+
+  getCustomYScale(domain, height): any {
+    let tempArray = []
+
+    for (let i = 0; i < this.seriesDomain.length; i++) {      
+      tempArray.push(height/this.seriesDomain.length * i + height/this.seriesDomain.length)
+    }
+
+    const scale = scaleOrdinal().domain(domain).range(tempArray);
+
+    return scale;
   }
 
   getScaleType(values): string {

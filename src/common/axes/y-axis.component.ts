@@ -110,7 +110,6 @@ export class YAxisComponent implements OnChanges {
       this.offset = this.offset;
       this.transform = `translate(${this.offset} , 0)`;
     }
-
     if (this.yAxisTickCount !== undefined) {
       this.tickArguments = [this.yAxisTickCount];
     }
