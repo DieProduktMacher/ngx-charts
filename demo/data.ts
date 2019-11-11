@@ -166,39 +166,39 @@ export const multiRidge: MultiSeries = [
     series: [
       {
         value: 2,
-        name: '0'
+        name: 0
       },
       {
         value: 8,
-        name: '5'
+        name: 5
       },
       {
         value: 23,
-        name: '10'
+        name: 10
       },
       {
         value: 35,
-        name: '15'
+        name: 15
       },
       {
         value: 53,
-        name: '20'
+        name: 20
       },
       {
         value: 75,
-        name: '25'
+        name: 25
       },
       {
         value: 34,
-        name: '30'
+        name: 30
       },
       {
         value: 7,
-        name: '35'
+        name: 35
       },
       {
         value: 2,
-        name: '40'
+        name: 40
       }
     ]
   },

@@ -10,7 +10,7 @@ import {
   TemplateRef
 } from '@angular/core';
 import { scaleLinear, scalePoint, scaleTime, scaleOrdinal, scaleQuantize } from 'd3-scale';
-import { curveLinear } from 'd3-shape';
+import { curveBasis } from 'd3-shape';
 
 import { calculateViewDimensions, ViewDimensions } from '../common/view-dimensions.helper';
 import { ColorHelper } from '../common/color.helper';
@@ -32,6 +32,16 @@ import { getUniqueXDomainValues, getScaleType } from '../common/domain.helper';
       (legendLabelDeactivate)="onDeactivate($event)"
     >
       <svg:g [attr.transform]="transform" class="area-chart chart">
+        <svg:defs>
+          <svg:clipPath [attr.id]="clipPathId">
+            <svg:rect
+              [attr.width]="dims.width + 10"
+              [attr.height]="dims.height + 100"
+              [attr.transform]="'translate(-5, -5)'"
+            />
+          </svg:clipPath>
+        </svg:defs>
+
         <svg:g
           ngx-charts-x-axis
           *ngIf="xAxis"
@@ -47,7 +57,6 @@ import { getUniqueXDomainValues, getScaleType } from '../common/domain.helper';
           [ticks]="xAxisTicks"
           (dimensionsChanged)="updateXAxisHeight($event)"
         ></svg:g>
-
         <svg:g
           ngx-charts-y-axis
           *ngIf="yAxis"
@@ -63,7 +72,7 @@ import { getUniqueXDomainValues, getScaleType } from '../common/domain.helper';
           (dimensionsChanged)="updateYAxisWidth($event)"
         ></svg:g>
 
-        <svg:g>
+        <svg:g [attr.clip-path]="clipPath">
           <svg:g *ngFor="let series of results; trackBy: trackBy; let i = index" >
             <svg:g
               ngx-charts-area-series
@@ -81,6 +90,35 @@ import { getUniqueXDomainValues, getScaleType } from '../common/domain.helper';
               [attr.transform]="transformEach"
             />
           </svg:g>
+        </svg:g>
+      </svg:g>
+      
+      <svg:g
+        ngx-charts-timeline
+        *ngIf="timeline"
+        [attr.transform]="timelineTransform"
+        [results]="results"
+        [view]="[timelineWidth, height]"
+        [height]="timelineHeight"
+        [scheme]="scheme"
+        [customColors]="customColors"
+        [legend]="legend"
+        [scaleType]="scaleType"
+        (onDomainChange)="updateDomain($event)"
+      >
+        <svg:g *ngFor="let series of results; trackBy: trackBy">
+          <svg:g
+            ngx-charts-area-series
+            [xScale]="timelineXScale"
+            [yScale]="timelineYScale"
+            [baseValue]="baseValue"
+            [colors]="colors"
+            [data]="series"
+            [scaleType]="scaleType"
+            [gradient]="gradient"
+            [curve]="curve"
+            [animations]="animations"
+          />
         </svg:g>
       </svg:g>
     </ngx-charts-chart>
@@ -105,7 +143,7 @@ export class AreaChartRidgeComponent extends BaseChartComponent {
   @Input() timeline;
   @Input() gradient: boolean;
   @Input() showGridLines: boolean = true;
-  @Input() curve: any = curveLinear;
+  @Input() curve: any = curveBasis;
   @Input() activeEntries: any[] = [];
   @Input() schemeType: string;
   @Input() trimXAxisTicks: boolean = true;
@@ -228,8 +266,7 @@ export class AreaChartRidgeComponent extends BaseChartComponent {
   getXDomain(): any[] {
     let values = getUniqueXDomainValues(this.results);
 
-    
-    this.scaleType = getScaleType(values);
+    this.scaleType = 'linear';
     let domain = [];
 
     if (this.scaleType === 'linear') {
@@ -244,16 +281,7 @@ export class AreaChartRidgeComponent extends BaseChartComponent {
       max = this.xScaleMax ? this.xScaleMax : Math.max(...values);
     }
 
-    if (this.scaleType === 'time') {
-      domain = [new Date(min), new Date(max)];
-      this.xSet = [...values].sort((a, b) => {
-        const aDate = a.getTime();
-        const bDate = b.getTime();
-        if (aDate > bDate) return 1;
-        if (bDate > aDate) return -1;
-        return 0;
-      });
-    } else if (this.scaleType === 'linear') {
+ if (this.scaleType === 'linear') {
       domain = [min, max];
       // Use compare function to sort numbers numerically
       this.xSet = [...values].sort((a, b) => a - b);
@@ -322,7 +350,7 @@ export class AreaChartRidgeComponent extends BaseChartComponent {
   getCustomYScale(domain, height): any {
     let tempArray = []
 
-    for (let i = 0; i < this.seriesDomain.length; i++) {      
+    for (let i = 0; i < this.seriesDomain.length; i++) {
       tempArray.push(height/this.seriesDomain.length * i + height/this.seriesDomain.length)
     }
 
