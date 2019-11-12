@@ -37,7 +37,7 @@ import { getUniqueXDomainValues, getScaleType } from '../common/domain.helper';
             <svg:rect
               [attr.width]="dims.width + 10"
               [attr.height]="dims.height + 100"
-              [attr.transform]="'translate(-5, -5)'"
+              [attr.transform]="'translate(-5, -100)'"
             />
           </svg:clipPath>
         </svg:defs>
@@ -143,7 +143,7 @@ export class AreaChartRidgeComponent extends BaseChartComponent {
   @Input() timeline;
   @Input() gradient: boolean;
   @Input() showGridLines: boolean = true;
-  @Input() curve: any = curveBasis;
+  @Input() curve: any;
   @Input() activeEntries: any[] = [];
   @Input() schemeType: string;
   @Input() trimXAxisTicks: boolean = true;
