@@ -56,6 +56,11 @@ var YAxisTicksComponent = /** @class */ (function () {
         if (this.tickFormatting) {
             this.tickFormat = this.tickFormatting;
         }
+        else if (scale.tickFormat && this.tickArguments === undefined) {
+            this.tickFormat = function (d) {
+                return d.toLocaleString();
+            };
+        }
         else if (scale.tickFormat) {
             this.tickFormat = scale.tickFormat.apply(scale, this.tickArguments);
         }
@@ -96,6 +101,7 @@ var YAxisTicksComponent = /** @class */ (function () {
                 break;
             case 'left':
                 this.transform = function (tick) {
+                    // console.log('Tick to transform: ', tick);
                     return 'translate(0,' + this.adjustedScale(tick) + ')';
                 };
                 this.textAnchor = 'end';
