@@ -71,6 +71,7 @@ export declare class AreaChartRidgeComponent extends BaseChartComponent {
     timelineTransform: any;
     timelinePadding: number;
     update(): void;
+    yScaleHover(i: any): any;
     updateTimeline(): void;
     translateArea(i: any): void;
     getXDomain(): any[];
