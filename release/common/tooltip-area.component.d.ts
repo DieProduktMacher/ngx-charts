@@ -5,6 +5,7 @@ export declare class TooltipArea {
     anchorValues: any[];
     lastAnchorPos: number;
     dims: any;
+    translateHover: any;
     xSet: any;
     xScale: any;
     yScale: any;
@@ -16,6 +17,7 @@ export declare class TooltipArea {
     hover: EventEmitter<{}>;
     tooltipAnchor: any;
     getValues(xVal: any): any[];
+    translateScale(): string;
     mouseMove(event: any): void;
     findClosestPointIndex(xPos: any): number;
     showTooltip(): void;

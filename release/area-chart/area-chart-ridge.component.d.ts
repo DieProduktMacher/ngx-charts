@@ -41,12 +41,14 @@ export declare class AreaChartRidgeComponent extends BaseChartComponent {
     tooltipTemplate: TemplateRef<any>;
     seriesTooltipTemplate: TemplateRef<any>;
     dims: ViewDimensions;
+    dimsHover: ViewDimensions;
     xSet: any;
     xDomain: any;
     yDomain: any;
     seriesDomain: any;
     xScale: any;
     yScale: any;
+    yScaleHover: any;
     yScaleCustom: any;
     yScaleCategories: any;
     transform: string;
@@ -63,6 +65,7 @@ export declare class AreaChartRidgeComponent extends BaseChartComponent {
     yAxisTicksCustom: any;
     filteredDomain: any;
     legendOptions: any;
+    translateHover: number;
     timelineWidth: any;
     timelineHeight: number;
     timelineXScale: any;
@@ -71,7 +74,6 @@ export declare class AreaChartRidgeComponent extends BaseChartComponent {
     timelineTransform: any;
     timelinePadding: number;
     update(): void;
-    yScaleHover(i: any): any;
     updateTimeline(): void;
     translateArea(i: any): void;
     getXDomain(): any[];

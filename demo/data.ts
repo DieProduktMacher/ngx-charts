@@ -165,11 +165,11 @@ export const multiRidge: MultiSeries = [
     name: 'Condition No. 1',
     series: [
       {
-        value: 119,
+        value: 2,
         name: 0
       },
       {
-        value: 2,
+        value: 119,
         name: 5
       },
       {

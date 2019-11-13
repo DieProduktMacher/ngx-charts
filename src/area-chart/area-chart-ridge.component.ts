@@ -72,13 +72,12 @@ import { getUniqueXDomainValues, getScaleType } from '../common/domain.helper';
           (dimensionsChanged)="updateYAxisWidth($event)"
         ></svg:g>
 
-        
-
         <svg:g [attr.clip-path]="clipPath">
           <svg:g *ngIf="!tooltipDisabled" (mouseleave)="hideCircles()">
             <svg:g
               ngx-charts-tooltip-area
-              [dims]="dims"
+              [dims]="dimsHover"
+              [translateHover]="translateHover"
               [xSet]="xSet"
               [xScale]="xScale"
               [yScale]="yScale"
@@ -208,12 +207,14 @@ export class AreaChartRidgeComponent extends BaseChartComponent {
   @ContentChild('seriesTooltipTemplate', { static: false }) seriesTooltipTemplate: TemplateRef<any>;
 
   dims: ViewDimensions;
+  dimsHover: ViewDimensions;
   xSet: any;
   xDomain: any;
   yDomain: any;
   seriesDomain: any;
   xScale: any;
   yScale: any;
+  yScaleHover: any;
   yScaleCustom: any;
   yScaleCategories: any;
   transform: string;
@@ -230,6 +231,7 @@ export class AreaChartRidgeComponent extends BaseChartComponent {
   yAxisTicksCustom: any;
   filteredDomain: any;
   legendOptions: any;
+  translateHover: number;
 
   timelineWidth: any;
   timelineHeight: number = 50;
@@ -257,6 +259,8 @@ export class AreaChartRidgeComponent extends BaseChartComponent {
       legendPosition: this.legendPosition
     });
 
+    this.seriesDomain = this.getSeriesDomain();
+
     if (this.timeline) {
       this.dims.height -= this.timelineHeight + this.margin[2] + this.timelinePadding;
     }
@@ -267,10 +271,10 @@ export class AreaChartRidgeComponent extends BaseChartComponent {
     }
 
     this.yDomain = this.getYDomain();
-    this.seriesDomain = this.getSeriesDomain();
 
     this.xScale = this.getXScale(this.xDomain, this.dims.width);
     this.yScale = this.getYScale(this.yDomain, this.dims.height / this.seriesDomain.length*1.6);
+    this.yScaleHover = this.getYScale(this.yDomain, this.dims.height*1.6);
     this.yScaleCustom = this.getCustomYScale(this.seriesDomain, this.dims.height);
     this.yScaleCategories = this.getYScale(this.seriesDomain, this.dims.height);
     this.yAxisTicksCustom = this.seriesDomain;
@@ -285,11 +289,22 @@ export class AreaChartRidgeComponent extends BaseChartComponent {
 
     this.clipPathId = 'clip' + id().toString();
     this.clipPath = `url(#${this.clipPathId})`;
-  }
 
-  yScaleHover(i) {
-    console.log(i)
-    return this.getYScale(this.yDomain, (this.dims.height / this.seriesDomain.length*1.6)*i)
+    this.translateHover = this.dims.height / this.seriesDomain.length*1.6 - this.dims.height / this.seriesDomain.length;
+    this.dimsHover = calculateViewDimensions({
+      width: this.width,
+      height: this.height,
+      margins: this.margin,
+      showXAxis: this.xAxis,
+      showYAxis: this.yAxis,
+      xAxisHeight: this.xAxisHeight,
+      yAxisWidth: this.yAxisWidth,
+      showXLabel: this.showXAxisLabel,
+      showYLabel: this.showYAxisLabel,
+      showLegend: this.legend,
+      legendType: this.schemeType,
+      legendPosition: this.legendPosition
+    });;
   }
 
   updateTimeline(): void {

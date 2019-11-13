@@ -12,6 +12,7 @@ import { createMouseEvent } from '../events';
         y="0"
         [attr.width]="dims.width"
         [attr.height]="dims.height"
+        [attr.transform]="translateScale()"
         style="opacity: 0; cursor: 'auto';"
         (mousemove)="mouseMove($event)"
         (mouseleave)="hideTooltip()"
@@ -32,6 +33,7 @@ import { createMouseEvent } from '../events';
         y="0"
         [attr.width]="1"
         [attr.height]="dims.height"
+        [attr.transform]="translateScale()"
         [style.opacity]="anchorOpacity"
         [style.pointer-events]="'none'"
         ngx-tooltip
@@ -70,6 +72,7 @@ export class TooltipArea {
   lastAnchorPos: number;
 
   @Input() dims;
+  @Input() translateHover;
   @Input() xSet;
   @Input() xScale;
   @Input() yScale;
@@ -124,6 +127,10 @@ export class TooltipArea {
     }
 
     return results;
+  }
+
+  translateScale() {
+    return `translate(0, -${this.translateHover})`;
   }
 
   mouseMove(event) {
