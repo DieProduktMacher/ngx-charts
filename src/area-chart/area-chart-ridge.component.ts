@@ -72,7 +72,44 @@ import { getUniqueXDomainValues, getScaleType } from '../common/domain.helper';
           (dimensionsChanged)="updateYAxisWidth($event)"
         ></svg:g>
 
+        
+
         <svg:g [attr.clip-path]="clipPath">
+          <svg:g *ngIf="!tooltipDisabled" (mouseleave)="hideCircles()">
+            <svg:g
+              ngx-charts-tooltip-area
+              [dims]="dims"
+              [xSet]="xSet"
+              [xScale]="xScale"
+              [yScale]="yScale"
+              [results]="results"
+              [colors]="colors"
+              [tooltipDisabled]="tooltipDisabled"
+              [tooltipTemplate]="seriesTooltipTemplate"
+              (hover)="updateHoveredVertical($event)"
+            />
+
+            <svg:g *ngFor="let series of results; let i = index">
+              <svg:g
+                ngx-charts-circle-series
+                [xScale]="xScale"
+                [yScale]="yScale"
+                [colors]="colors"
+                [activeEntries]="activeEntries"
+                [data]="series"
+                [scaleType]="scaleType"
+                [visibleValue]="hoveredVertical"
+                [tooltipDisabled]="tooltipDisabled"
+                [tooltipTemplate]="tooltipTemplate"
+                [attr.transform]="translateArea(i)"
+                [attr.transform]="transformEach"
+                (select)="onClick($event, series)"
+                (activate)="onActivate($event)"
+                (deactivate)="onDeactivate($event)"
+              />
+            </svg:g>
+          </svg:g>
+
           <svg:g *ngFor="let series of results; trackBy: trackBy; let i = index" >
             <svg:g
               ngx-charts-area-series
@@ -92,6 +129,8 @@ import { getUniqueXDomainValues, getScaleType } from '../common/domain.helper';
           </svg:g>
         </svg:g>
       </svg:g>
+
+      
       
       <svg:g
         ngx-charts-timeline
@@ -246,6 +285,11 @@ export class AreaChartRidgeComponent extends BaseChartComponent {
 
     this.clipPathId = 'clip' + id().toString();
     this.clipPath = `url(#${this.clipPathId})`;
+  }
+
+  yScaleHover(i) {
+    console.log(i)
+    return this.getYScale(this.yDomain, (this.dims.height / this.seriesDomain.length*1.6)*i)
   }
 
   updateTimeline(): void {
