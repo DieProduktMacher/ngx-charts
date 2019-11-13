@@ -693,7 +693,7 @@ var TooltipContentComponent = /** @class */ (function () {
         setTimeout(function () { return _this.renderer.addClass(nativeElm, 'animate'); }, 1);
     };
     TooltipContentComponent.prototype.positionContent = function (nativeElm, hostDim, elmDim) {
-        if (this.precisePosition && this.precisePosition != -1) {
+        if (this.precisePosition && this.precisePosition !== -1) {
             var topOffset = this.precisePosition.y - elmDim.height - 20;
             var leftOffset = this.precisePosition.x - elmDim.width / 2;
             this.renderer.setStyle(nativeElm, 'top', topOffset + "px");
@@ -2639,7 +2639,6 @@ var YAxisTicksComponent = /** @class */ (function () {
                 break;
             case 'left':
                 this.transform = function (tick) {
-                    // console.log('Tick to transform: ', tick);
                     return 'translate(0,' + this.adjustedScale(tick) + ')';
                 };
                 this.textAnchor = 'end';
@@ -3616,6 +3615,7 @@ var Timeline = /** @class */ (function () {
     function Timeline(element, cd) {
         this.cd = cd;
         this.height = 50;
+        this.zoomLimit = 30;
         this.select = new EventEmitter();
         this.onDomainChange = new EventEmitter();
         this.initialized = false;
@@ -3700,9 +3700,17 @@ var Timeline = /** @class */ (function () {
             .extent([[0, 0], [width, height]])
             .on('brush end', function () {
             var selection = event.selection || _this.xScale.range();
-            var newDomain = selection.map(_this.xScale.invert);
-            _this.onDomainChange.emit(newDomain);
-            _this.cd.markForCheck();
+            if (selection[1] - selection[0] > _this.zoomLimit) {
+                var newDomain = selection.map(_this.xScale.invert);
+                _this.onDomainChange.emit(newDomain);
+                _this.cd.markForCheck();
+                _this.previousS0 = event.selection[0];
+                _this.previousS1 = event.selection[1];
+            }
+            else if (_this.previousS0) {
+                select(_this.element).select('.brush').call(_this.brush.move, [_this.previousS0, _this.previousS1]);
+                return;
+            }
         });
         select(this.element)
             .select('.brush')
@@ -3772,6 +3780,10 @@ var Timeline = /** @class */ (function () {
         Input(),
         __metadata("design:type", Number)
     ], Timeline.prototype, "height", void 0);
+    __decorate([
+        Input(),
+        __metadata("design:type", Number)
+    ], Timeline.prototype, "zoomLimit", void 0);
     __decorate([
         Output(),
         __metadata("design:type", Object)
@@ -5816,7 +5828,8 @@ var AreaChartRidgeComponent = /** @class */ (function (_super) {
         this.transformEach = "translate(0, 400)";
         this.clipPathId = 'clip' + id().toString();
         this.clipPath = "url(#" + this.clipPathId + ")";
-        this.translateHover = this.dims.height / this.seriesDomain.length * 1.6 - this.dims.height / this.seriesDomain.length;
+        this.translateHover =
+            this.dims.height / this.seriesDomain.length * 1.6 - this.dims.height / this.seriesDomain.length;
         this.dimsHover = calculateViewDimensions({
             width: this.width,
             height: this.height,
@@ -6168,6 +6181,10 @@ var AreaChartRidgeComponent = /** @class */ (function (_super) {
         __metadata("design:type", Number)
     ], AreaChartRidgeComponent.prototype, "yScaleMax", void 0);
     __decorate([
+        Input(),
+        __metadata("design:type", Number)
+    ], AreaChartRidgeComponent.prototype, "zoomLimit", void 0);
+    __decorate([
         Output(),
         __metadata("design:type", typeof (_a = typeof EventEmitter !== "undefined" && EventEmitter) === "function" ? _a : Object)
     ], AreaChartRidgeComponent.prototype, "activate", void 0);
@@ -6192,7 +6209,7 @@ var AreaChartRidgeComponent = /** @class */ (function (_super) {
     AreaChartRidgeComponent = __decorate([
         Component({
             selector: 'ngx-charts-area-chart-ridge',
-            template: "\n    <ngx-charts-chart\n      [view]=\"[width, height]\"\n      [showLegend]=\"legend\"\n      [legendOptions]=\"legendOptions\"\n      [activeEntries]=\"activeEntries\"\n      [animations]=\"animations\"\n      (legendLabelClick)=\"onClick($event)\"\n      (legendLabelActivate)=\"onActivate($event)\"\n      (legendLabelDeactivate)=\"onDeactivate($event)\"\n    >\n      <svg:g [attr.transform]=\"transform\" class=\"area-chart chart\">\n        <svg:defs>\n          <svg:clipPath [attr.id]=\"clipPathId\">\n            <svg:rect\n              [attr.width]=\"dims.width + 10\"\n              [attr.height]=\"dims.height + 100\"\n              [attr.transform]=\"'translate(-5, -100)'\"\n            />\n          </svg:clipPath>\n        </svg:defs>\n\n        <svg:g\n          ngx-charts-x-axis\n          *ngIf=\"xAxis\"\n          [xScale]=\"xScale\"\n          [dims]=\"dims\"\n          [showGridLines]=\"showGridLines\"\n          [showLabel]=\"showXAxisLabel\"\n          [labelText]=\"xAxisLabel\"\n          [trimTicks]=\"trimXAxisTicks\"\n          [rotateTicks]=\"rotateXAxisTicks\"\n          [maxTickLength]=\"maxXAxisTickLength\"\n          [tickFormatting]=\"xAxisTickFormatting\"\n          [ticks]=\"xAxisTicks\"\n          (dimensionsChanged)=\"updateXAxisHeight($event)\"\n        ></svg:g>\n        <svg:g\n          ngx-charts-y-axis\n          *ngIf=\"yAxis\"\n          [yScale]=\"yScaleCustom\"\n          [dims]=\"dims\"\n          [showGridLines]=\"false\"\n          [showLabel]=\"showYAxisLabel\"\n          [labelText]=\"yAxisLabel\"\n          [trimTicks]=\"trimYAxisTicks\"\n          [maxTickLength]=\"maxYAxisTickLength\"\n          [tickFormatting]=\"yAxisTickFormatting\"\n          [ticks]=\"yAxisTicksCustom\"\n          (dimensionsChanged)=\"updateYAxisWidth($event)\"\n        ></svg:g>\n\n        <svg:g [attr.clip-path]=\"clipPath\">\n          <svg:g *ngIf=\"!tooltipDisabled\" (mouseleave)=\"hideCircles()\">\n            <svg:g\n              ngx-charts-tooltip-area\n              [dims]=\"dimsHover\"\n              [translateHover]=\"translateHover\"\n              [xSet]=\"xSet\"\n              [xScale]=\"xScale\"\n              [yScale]=\"yScale\"\n              [results]=\"results\"\n              [colors]=\"colors\"\n              [tooltipDisabled]=\"tooltipDisabled\"\n              [tooltipTemplate]=\"seriesTooltipTemplate\"\n              (hover)=\"updateHoveredVertical($event)\"\n            />\n\n            <svg:g *ngFor=\"let series of results; let i = index\">\n              <svg:g\n                ngx-charts-circle-series\n                [xScale]=\"xScale\"\n                [yScale]=\"yScale\"\n                [colors]=\"colors\"\n                [activeEntries]=\"activeEntries\"\n                [data]=\"series\"\n                [scaleType]=\"scaleType\"\n                [visibleValue]=\"hoveredVertical\"\n                [tooltipDisabled]=\"tooltipDisabled\"\n                [tooltipTemplate]=\"tooltipTemplate\"\n                [attr.transform]=\"translateArea(i)\"\n                [attr.transform]=\"transformEach\"\n                (select)=\"onClick($event, series)\"\n                (activate)=\"onActivate($event)\"\n                (deactivate)=\"onDeactivate($event)\"\n              />\n            </svg:g>\n          </svg:g>\n\n          <svg:g *ngFor=\"let series of results; trackBy: trackBy; let i = index\" >\n            <svg:g\n              ngx-charts-area-series\n              [xScale]=\"xScale\"\n              [yScale]=\"yScale\"\n              [baseValue]=\"baseValue\"\n              [colors]=\"colors\"\n              [data]=\"series\"\n              [activeEntries]=\"activeEntries\"\n              [scaleType]=\"scaleType\"\n              [gradient]=\"gradient\"\n              [curve]=\"curve\"\n              [animations]=\"animations\"\n              [attr.transform]=\"translateArea(i)\"\n              [attr.transform]=\"transformEach\"\n            />\n          </svg:g>\n        </svg:g>\n      </svg:g>\n\n      \n      \n      <svg:g\n        ngx-charts-timeline\n        *ngIf=\"timeline\"\n        [attr.transform]=\"timelineTransform\"\n        [results]=\"results\"\n        [view]=\"[timelineWidth, height]\"\n        [height]=\"timelineHeight\"\n        [scheme]=\"scheme\"\n        [customColors]=\"customColors\"\n        [legend]=\"legend\"\n        [scaleType]=\"scaleType\"\n        (onDomainChange)=\"updateDomain($event)\"\n      >\n        <svg:g *ngFor=\"let series of results; trackBy: trackBy\">\n          <svg:g\n            ngx-charts-area-series\n            [xScale]=\"timelineXScale\"\n            [yScale]=\"timelineYScale\"\n            [baseValue]=\"baseValue\"\n            [colors]=\"colors\"\n            [data]=\"series\"\n            [scaleType]=\"scaleType\"\n            [gradient]=\"gradient\"\n            [curve]=\"curve\"\n            [animations]=\"animations\"\n          />\n        </svg:g>\n      </svg:g>\n    </ngx-charts-chart>\n  ",
+            template: "\n    <ngx-charts-chart\n      [view]=\"[width, height]\"\n      [showLegend]=\"legend\"\n      [legendOptions]=\"legendOptions\"\n      [activeEntries]=\"activeEntries\"\n      [animations]=\"animations\"\n      (legendLabelClick)=\"onClick($event)\"\n      (legendLabelActivate)=\"onActivate($event)\"\n      (legendLabelDeactivate)=\"onDeactivate($event)\"\n    >\n      <svg:g [attr.transform]=\"transform\" class=\"area-chart chart\">\n        <svg:defs>\n          <svg:clipPath [attr.id]=\"clipPathId\">\n            <svg:rect\n              [attr.width]=\"dims.width + 10\"\n              [attr.height]=\"dims.height + 100\"\n              [attr.transform]=\"'translate(-5, -100)'\"\n            />\n          </svg:clipPath>\n        </svg:defs>\n\n        <svg:g\n          ngx-charts-x-axis\n          *ngIf=\"xAxis\"\n          [xScale]=\"xScale\"\n          [dims]=\"dims\"\n          [showGridLines]=\"showGridLines\"\n          [showLabel]=\"showXAxisLabel\"\n          [labelText]=\"xAxisLabel\"\n          [trimTicks]=\"trimXAxisTicks\"\n          [rotateTicks]=\"rotateXAxisTicks\"\n          [maxTickLength]=\"maxXAxisTickLength\"\n          [tickFormatting]=\"xAxisTickFormatting\"\n          [ticks]=\"xAxisTicks\"\n          (dimensionsChanged)=\"updateXAxisHeight($event)\"\n        ></svg:g>\n        <svg:g\n          ngx-charts-y-axis\n          *ngIf=\"yAxis\"\n          [yScale]=\"yScaleCustom\"\n          [dims]=\"dims\"\n          [showGridLines]=\"false\"\n          [showLabel]=\"showYAxisLabel\"\n          [labelText]=\"yAxisLabel\"\n          [trimTicks]=\"trimYAxisTicks\"\n          [maxTickLength]=\"maxYAxisTickLength\"\n          [tickFormatting]=\"yAxisTickFormatting\"\n          [ticks]=\"yAxisTicksCustom\"\n          (dimensionsChanged)=\"updateYAxisWidth($event)\"\n        ></svg:g>\n\n        <svg:g [attr.clip-path]=\"clipPath\">\n          <svg:g *ngIf=\"!tooltipDisabled\" (mouseleave)=\"hideCircles()\">\n            <svg:g\n              ngx-charts-tooltip-area\n              [dims]=\"dimsHover\"\n              [translateHover]=\"translateHover\"\n              [xSet]=\"xSet\"\n              [xScale]=\"xScale\"\n              [yScale]=\"yScale\"\n              [results]=\"results\"\n              [colors]=\"colors\"\n              [tooltipDisabled]=\"tooltipDisabled\"\n              [tooltipTemplate]=\"seriesTooltipTemplate\"\n              (hover)=\"updateHoveredVertical($event)\"\n            />\n\n            <svg:g *ngFor=\"let series of results; let i = index\">\n              <svg:g\n                ngx-charts-circle-series\n                [xScale]=\"xScale\"\n                [yScale]=\"yScale\"\n                [colors]=\"colors\"\n                [activeEntries]=\"activeEntries\"\n                [data]=\"series\"\n                [scaleType]=\"scaleType\"\n                [visibleValue]=\"hoveredVertical\"\n                [tooltipDisabled]=\"tooltipDisabled\"\n                [tooltipTemplate]=\"tooltipTemplate\"\n                [attr.transform]=\"translateArea(i)\"\n                [attr.transform]=\"transformEach\"\n                (select)=\"onClick($event, series)\"\n                (activate)=\"onActivate($event)\"\n                (deactivate)=\"onDeactivate($event)\"\n              />\n            </svg:g>\n          </svg:g>\n\n          <svg:g *ngFor=\"let series of results; trackBy: trackBy; let i = index\" >\n            <svg:g\n              ngx-charts-area-series\n              [xScale]=\"xScale\"\n              [yScale]=\"yScale\"\n              [baseValue]=\"baseValue\"\n              [colors]=\"colors\"\n              [data]=\"series\"\n              [activeEntries]=\"activeEntries\"\n              [scaleType]=\"scaleType\"\n              [gradient]=\"gradient\"\n              [curve]=\"curve\"\n              [animations]=\"animations\"\n              [attr.transform]=\"translateArea(i)\"\n              [attr.transform]=\"transformEach\"\n            />\n          </svg:g>\n        </svg:g>\n      </svg:g>\n\n      <svg:g\n        ngx-charts-timeline\n        *ngIf=\"timeline\"\n        [attr.transform]=\"timelineTransform\"\n        [results]=\"results\"\n        [view]=\"[timelineWidth, height]\"\n        [height]=\"timelineHeight\"\n        [scheme]=\"scheme\"\n        [customColors]=\"customColors\"\n        [legend]=\"legend\"\n        [scaleType]=\"scaleType\"\n        [zoomLimit]=\"zoomLimit\"\n        (onDomainChange)=\"updateDomain($event)\"\n      >\n        <svg:g *ngFor=\"let series of results; trackBy: trackBy\">\n          <svg:g\n            ngx-charts-area-series\n            [xScale]=\"timelineXScale\"\n            [yScale]=\"timelineYScale\"\n            [baseValue]=\"baseValue\"\n            [colors]=\"colors\"\n            [data]=\"series\"\n            [scaleType]=\"scaleType\"\n            [gradient]=\"gradient\"\n            [curve]=\"curve\"\n            [animations]=\"animations\"\n          />\n        </svg:g>\n      </svg:g>\n    </ngx-charts-chart>\n  ",
             changeDetection: ChangeDetectionStrategy.OnPush,
             styles: [".ngx-charts{float:left;overflow:visible}.ngx-charts .arc,.ngx-charts .bar,.ngx-charts .circle{cursor:pointer}.ngx-charts .axis-label{font-size:14px}.ngx-charts .arc.active,.ngx-charts .arc:hover,.ngx-charts .bar.active,.ngx-charts .bar:hover,.ngx-charts .card.active,.ngx-charts .card:hover,.ngx-charts .cell.active,.ngx-charts .cell:hover{opacity:.8;transition:opacity .1s ease-in-out}.ngx-charts .arc:focus,.ngx-charts .bar:focus,.ngx-charts .card:focus,.ngx-charts .cell:focus{outline:0}.ngx-charts .arc.hidden,.ngx-charts .bar.hidden,.ngx-charts .card.hidden,.ngx-charts .cell.hidden{display:none}.ngx-charts g:focus{outline:0}.ngx-charts .area-series.inactive,.ngx-charts .line-series-range.inactive,.ngx-charts .line-series.inactive,.ngx-charts .polar-series-area.inactive,.ngx-charts .polar-series-path.inactive{transition:opacity .1s ease-in-out;opacity:.2}.ngx-charts .line-highlight{display:none}.ngx-charts .line-highlight.active{display:block}.ngx-charts .area{opacity:.6}.ngx-charts .circle:hover{cursor:pointer}.ngx-charts .label{font-size:12px;font-weight:400}.ngx-charts .tooltip-anchor{fill:#000}.ngx-charts .gridline-path{stroke:#ddd;stroke-width:1;fill:none}.ngx-charts .refline-path{stroke:#a8b2c7;stroke-width:1;stroke-dasharray:5;stroke-dashoffset:5}.ngx-charts .refline-label{font-size:9px}.ngx-charts .reference-area{fill-opacity:.05;fill:#000}.ngx-charts .gridline-path-dotted{stroke:#ddd;stroke-width:1;fill:none;stroke-dasharray:1,20;stroke-dashoffset:3}.ngx-charts .grid-panel rect{fill:none}.ngx-charts .grid-panel.odd rect{fill:rgba(0,0,0,.05)}"],
             encapsulation: ViewEncapsulation.None

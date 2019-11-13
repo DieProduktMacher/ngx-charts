@@ -150,7 +150,7 @@ export class YAxisTicksComponent implements OnChanges, AfterViewInit {
 
     if (this.tickFormatting) {
       this.tickFormat = this.tickFormatting;
-    } else if (scale.tickFormat && this.tickArguments === undefined){
+    } else if (scale.tickFormat && this.tickArguments === undefined) {
       this.tickFormat = function(d) {
         return d.toLocaleString();
       };
@@ -197,7 +197,6 @@ export class YAxisTicksComponent implements OnChanges, AfterViewInit {
       case 'left':
         
         this.transform = function(tick) {
-          // console.log('Tick to transform: ', tick);
           return 'translate(0,' + this.adjustedScale(tick) + ')';
         };
         

@@ -48,7 +48,7 @@ var TooltipContentComponent = /** @class */ (function () {
         setTimeout(function () { return _this.renderer.addClass(nativeElm, 'animate'); }, 1);
     };
     TooltipContentComponent.prototype.positionContent = function (nativeElm, hostDim, elmDim) {
-        if (this.precisePosition && this.precisePosition != -1) {
+        if (this.precisePosition && this.precisePosition !== -1) {
             var topOffset = this.precisePosition.y - elmDim.height - 20;
             var leftOffset = this.precisePosition.x - elmDim.width / 2;
             this.renderer.setStyle(nativeElm, 'top', topOffset + "px");

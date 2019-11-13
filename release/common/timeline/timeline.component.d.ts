@@ -11,6 +11,7 @@ export declare class Timeline implements OnChanges {
     autoScale: any;
     scaleType: any;
     height: number;
+    zoomLimit: number;
     select: EventEmitter<{}>;
     onDomainChange: EventEmitter<{}>;
     element: HTMLElement;
@@ -22,6 +23,8 @@ export declare class Timeline implements OnChanges {
     initialized: boolean;
     filterId: any;
     filter: any;
+    previousS0: any;
+    previousS1: any;
     constructor(element: ElementRef, cd: ChangeDetectorRef);
     ngOnChanges(changes: SimpleChanges): void;
     update(): void;

@@ -101,7 +101,6 @@ var YAxisTicksComponent = /** @class */ (function () {
                 break;
             case 'left':
                 this.transform = function (tick) {
-                    // console.log('Tick to transform: ', tick);
                     return 'translate(0,' + this.adjustedScale(tick) + ')';
                 };
                 this.textAnchor = 'end';

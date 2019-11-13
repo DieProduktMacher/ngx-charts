@@ -129,8 +129,6 @@ import { getUniqueXDomainValues, getScaleType } from '../common/domain.helper';
         </svg:g>
       </svg:g>
 
-      
-      
       <svg:g
         ngx-charts-timeline
         *ngIf="timeline"
@@ -142,6 +140,7 @@ import { getUniqueXDomainValues, getScaleType } from '../common/domain.helper';
         [customColors]="customColors"
         [legend]="legend"
         [scaleType]="scaleType"
+        [zoomLimit]="zoomLimit"
         (onDomainChange)="updateDomain($event)"
       >
         <svg:g *ngFor="let series of results; trackBy: trackBy">
@@ -199,6 +198,7 @@ export class AreaChartRidgeComponent extends BaseChartComponent {
   @Input() xScaleMax: any;
   @Input() yScaleMin: number;
   @Input() yScaleMax: number;
+  @Input() zoomLimit: number;
 
   @Output() activate: EventEmitter<any> = new EventEmitter();
   @Output() deactivate: EventEmitter<any> = new EventEmitter();
@@ -273,8 +273,8 @@ export class AreaChartRidgeComponent extends BaseChartComponent {
     this.yDomain = this.getYDomain();
 
     this.xScale = this.getXScale(this.xDomain, this.dims.width);
-    this.yScale = this.getYScale(this.yDomain, this.dims.height / this.seriesDomain.length*1.6);
-    this.yScaleHover = this.getYScale(this.yDomain, this.dims.height*1.6);
+    this.yScale = this.getYScale(this.yDomain, this.dims.height / this.seriesDomain.length * 1.6);
+    this.yScaleHover = this.getYScale(this.yDomain, this.dims.height * 1.6);
     this.yScaleCustom = this.getCustomYScale(this.seriesDomain, this.dims.height);
     this.yScaleCategories = this.getYScale(this.seriesDomain, this.dims.height);
     this.yAxisTicksCustom = this.seriesDomain;
@@ -290,7 +290,9 @@ export class AreaChartRidgeComponent extends BaseChartComponent {
     this.clipPathId = 'clip' + id().toString();
     this.clipPath = `url(#${this.clipPathId})`;
 
-    this.translateHover = this.dims.height / this.seriesDomain.length*1.6 - this.dims.height / this.seriesDomain.length;
+    this.translateHover = 
+      this.dims.height / this.seriesDomain.length * 1.6 - this.dims.height / this.seriesDomain.length;
+
     this.dimsHover = calculateViewDimensions({
       width: this.width,
       height: this.height,
@@ -304,7 +306,7 @@ export class AreaChartRidgeComponent extends BaseChartComponent {
       showLegend: this.legend,
       legendType: this.schemeType,
       legendPosition: this.legendPosition
-    });;
+    });
   }
 
   updateTimeline(): void {
@@ -318,7 +320,7 @@ export class AreaChartRidgeComponent extends BaseChartComponent {
   }
 
   translateArea(i) {
-    let trans = (this.dims.height / this.seriesDomain.length)*(i-0.6);
+    const trans = (this.dims.height / this.seriesDomain.length) * (i - 0.6);
     this.transformEach = `translate(0, ${trans})`;
   }
 
@@ -340,7 +342,7 @@ export class AreaChartRidgeComponent extends BaseChartComponent {
       max = this.xScaleMax ? this.xScaleMax : Math.max(...values);
     }
 
- if (this.scaleType === 'linear') {
+    if (this.scaleType === 'linear') {
       domain = [min, max];
       // Use compare function to sort numbers numerically
       this.xSet = [...values].sort((a, b) => a - b);
@@ -407,10 +409,10 @@ export class AreaChartRidgeComponent extends BaseChartComponent {
   }
 
   getCustomYScale(domain, height): any {
-    let tempArray = []
+    const tempArray = [];
 
     for (let i = 0; i < this.seriesDomain.length; i++) {
-      tempArray.push(height/this.seriesDomain.length * i + height/this.seriesDomain.length)
+      tempArray.push(height / this.seriesDomain.length * i + height / this.seriesDomain.length);
     }
 
     const scale = scaleOrdinal().domain(domain).range(tempArray);

@@ -48,6 +48,7 @@ export class Timeline implements OnChanges {
   @Input() autoScale;
   @Input() scaleType;
   @Input() height: number = 50;
+  @Input() zoomLimit: number = 30;
 
   @Output() select = new EventEmitter();
   @Output() onDomainChange = new EventEmitter();
@@ -61,6 +62,8 @@ export class Timeline implements OnChanges {
   initialized: boolean = false;
   filterId: any;
   filter: any;
+  previousS0: any;
+  previousS1: any;
 
   constructor(
     element: ElementRef,
@@ -156,10 +159,18 @@ export class Timeline implements OnChanges {
       .extent([[0, 0], [width, height]])
       .on('brush end', () => {
         const selection = d3event.selection || this.xScale.range();
-        const newDomain = selection.map(this.xScale.invert);
 
-        this.onDomainChange.emit(newDomain);
-        this.cd.markForCheck();
+        if (selection[1] - selection[0] > this.zoomLimit) {
+          const newDomain = selection.map(this.xScale.invert);
+
+          this.onDomainChange.emit(newDomain);
+          this.cd.markForCheck();
+          this.previousS0 = d3event.selection[0];
+          this.previousS1 = d3event.selection[1];
+        } else if (this.previousS0) {
+          select(this.element).select('.brush').call(this.brush.move, [this.previousS0, this.previousS1]);
+          return;
+        }
       });
 
     select(this.element)

@@ -36,6 +36,7 @@ export declare class AreaChartRidgeComponent extends BaseChartComponent {
     xScaleMax: any;
     yScaleMin: number;
     yScaleMax: number;
+    zoomLimit: number;
     activate: EventEmitter<any>;
     deactivate: EventEmitter<any>;
     tooltipTemplate: TemplateRef<any>;

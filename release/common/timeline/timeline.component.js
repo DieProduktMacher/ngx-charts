@@ -16,6 +16,7 @@ var Timeline = /** @class */ (function () {
     function Timeline(element, cd) {
         this.cd = cd;
         this.height = 50;
+        this.zoomLimit = 30;
         this.select = new EventEmitter();
         this.onDomainChange = new EventEmitter();
         this.initialized = false;
@@ -100,9 +101,17 @@ var Timeline = /** @class */ (function () {
             .extent([[0, 0], [width, height]])
             .on('brush end', function () {
             var selection = d3event.selection || _this.xScale.range();
-            var newDomain = selection.map(_this.xScale.invert);
-            _this.onDomainChange.emit(newDomain);
-            _this.cd.markForCheck();
+            if (selection[1] - selection[0] > _this.zoomLimit) {
+                var newDomain = selection.map(_this.xScale.invert);
+                _this.onDomainChange.emit(newDomain);
+                _this.cd.markForCheck();
+                _this.previousS0 = d3event.selection[0];
+                _this.previousS1 = d3event.selection[1];
+            }
+            else if (_this.previousS0) {
+                select(_this.element).select('.brush').call(_this.brush.move, [_this.previousS0, _this.previousS1]);
+                return;
+            }
         });
         select(this.element)
             .select('.brush')
@@ -172,6 +181,10 @@ var Timeline = /** @class */ (function () {
         Input(),
         __metadata("design:type", Number)
     ], Timeline.prototype, "height", void 0);
+    __decorate([
+        Input(),
+        __metadata("design:type", Number)
+    ], Timeline.prototype, "zoomLimit", void 0);
     __decorate([
         Output(),
         __metadata("design:type", Object)
