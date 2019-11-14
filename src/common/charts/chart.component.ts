@@ -87,6 +87,7 @@ export class ChartComponent implements OnChanges {
   // remove
   @Input() data;
   @Input() valuedata;
+  @Input() valueFormatting;
   @Input() advancedData;
   @Input() legendData;
   @Input() legendType: any;

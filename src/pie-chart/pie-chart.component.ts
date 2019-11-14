@@ -21,6 +21,7 @@ import { DataItem } from '../models/chart-data.model';
       [showLegend]="legend"
       [legendAdvanced]="legendAdvanced"
       [advancedData]="data"
+      [valueFormatting]="valueFormatting"
       [legendOptions]="legendOptions"
       [activeEntries]="activeEntries"
       [animations]="animations"
@@ -77,6 +78,7 @@ export class PieChartComponent extends BaseChartComponent {
   @Input() legendPosition: string = 'right';
   @Input() explodeSlices = false;
   @Input() doughnut = false;
+  @Input() valueFormatting: any;
   @Input() totalValue: string;
   @Input() totalLabel: string;
   @Input() arcWidth = 0.25;

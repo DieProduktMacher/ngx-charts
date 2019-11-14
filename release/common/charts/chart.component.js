@@ -79,6 +79,10 @@ var ChartComponent = /** @class */ (function () {
     __decorate([
         Input(),
         __metadata("design:type", Object)
+    ], ChartComponent.prototype, "valueFormatting", void 0);
+    __decorate([
+        Input(),
+        __metadata("design:type", Object)
     ], ChartComponent.prototype, "advancedData", void 0);
     __decorate([
         Input(),

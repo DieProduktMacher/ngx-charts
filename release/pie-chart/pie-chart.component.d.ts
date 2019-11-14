@@ -10,6 +10,7 @@ export declare class PieChartComponent extends BaseChartComponent {
     legendPosition: string;
     explodeSlices: boolean;
     doughnut: boolean;
+    valueFormatting: any;
     totalValue: string;
     totalLabel: string;
     arcWidth: number;
