@@ -29,7 +29,6 @@ var AdvancedLegendComponent = /** @class */ (function () {
         return this.data.map(function (d) { return d.value; }).reduce(function (sum, d) { return sum + d; }, 0);
     };
     AdvancedLegendComponent.prototype.update = function () {
-        console.log('Incoming data for legend: ', this.data);
         this.total = this.getTotal();
         this.roundedTotal = this.total;
         this.legendItems = this.getLegendItems();
