@@ -14,7 +14,7 @@ import { formatLabel } from '../label.helper';
 @Component({
   selector: 'ngx-charts-advanced-legend',
   template: `
-    <div class="advanced-pie-legend" [style.width.px]="width" [style.height.px]="height">
+    <div class="advanced-pie-legend" [style.width.px]="width" >
       <div class="legend-items-container">
         <div class="legend-items">
           <div
