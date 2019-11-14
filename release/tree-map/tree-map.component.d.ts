@@ -5,6 +5,7 @@ import { DataItem } from '../models/chart-data.model';
 export declare class TreeMapComponent extends BaseChartComponent {
     activeEntries: any[];
     legend: boolean;
+    legendAdvanced: boolean;
     legendTitle: string;
     legendPosition: string;
     tooltipDisabled: boolean;
@@ -23,7 +24,7 @@ export declare class TreeMapComponent extends BaseChartComponent {
     treemap: any;
     data: any;
     valuedata: any[];
-    legendData: any;
+    legendData: any[];
     margin: number[];
     legendOptions: any;
     update(): void;

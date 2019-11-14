@@ -79,10 +79,13 @@ export class AdvancedLegendComponent implements OnChanges {
   }
 
   update(): void {
+    console.log('Incoming data for legend: ', this.data);
     this.total = this.getTotal();
     this.roundedTotal = this.total;
 
     this.legendItems = this.getLegendItems();
+
+ 
   }
 
   getLegendItems(): any {

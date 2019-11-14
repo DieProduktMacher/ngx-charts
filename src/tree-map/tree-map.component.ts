@@ -20,7 +20,9 @@ import { DataItem } from '../models/chart-data.model';
   template: `
     <ngx-charts-chart 
     [view]="[width, height]"
-    [showLegend]="legend"
+    [showLegend]="false"
+    [legendAdvanced]="legendAdvanced"
+    [advancedData]="legendData"
     [legendOptions]="legendOptions"
     [valuedata]="valuedata"
     [valueFormatting]="valueFormatting"
@@ -59,8 +61,9 @@ export class TreeMapComponent extends BaseChartComponent {
   // @Input() results;
   @Input() activeEntries: any[] = [];
   @Input() legend = true;
+  @Input() legendAdvanced: boolean = true;
   @Input() legendTitle: string = 'Legend';
-  @Input() legendPosition: string = 'bottom';
+  @Input() legendPosition: string = 'below';
   @Input() tooltipDisabled: boolean = false;
   @Input() valueFormatting: any;
   @Input() labelFormatting: any;
@@ -80,7 +83,7 @@ export class TreeMapComponent extends BaseChartComponent {
   treemap: any;
   data: any;
   valuedata = [];
-  legendData: any;
+  legendData = [];
   margin = [0, 0, 0, 0];
   legendOptions: any;
 
@@ -126,6 +129,12 @@ export class TreeMapComponent extends BaseChartComponent {
     this.legendOptions = this.getLegendOptions();
 
     this.transform = `translate(${this.dims.xOffset} , ${this.margin[0]})`;
+
+    this.data.children.forEach(d => {
+      if (this.legendData.length < this.data.children.length) {
+        this.legendData.push({name: d.id, value: d.value});
+      }
+    });
   }
 
   getCells(): any[] {
