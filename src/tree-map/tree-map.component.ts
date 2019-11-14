@@ -23,6 +23,7 @@ import { DataItem } from '../models/chart-data.model';
     [showLegend]="legend"
     [legendOptions]="legendOptions"
     [valuedata]="valuedata"
+    [valueFormatting]="valueFormatting"
     [activeEntries]="activeEntries"
     [animations]="animations"
     (legendLabelActivate)="onActivate($event)"
