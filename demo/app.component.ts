@@ -233,7 +233,7 @@ export class AppComponent implements OnInit {
   sumBy: string = 'Size';
 
   stackedgroupedColorScheme = {
-    domain: ['#B1DADD', 'rgba(177, 218, 221, 0.5)', '#006192', 'rgba(0,97,146,0.5)']
+    domain: ['pink', 'yellow', 'black', 'grey', 'red', 'green']
   };
 
   // bubble chart interactive demo

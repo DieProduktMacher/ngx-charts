@@ -902,6 +902,25 @@ export const groupedStacked: GroupedStackedBarChartData = [
     series: 
       [
         {
+          name: '17',
+          series: [
+          {
+            name: 'France',
+            value: 400,
+            extra: {
+              code: 'fr'
+            }
+          },
+          {
+            name: 'Japan',
+            value: 600,
+            extra: {
+              code: 'jp'
+            }
+          }
+        ]
+        },
+        {
           name: '18',
           series: [
           {
@@ -946,6 +965,25 @@ export const groupedStacked: GroupedStackedBarChartData = [
     series: 
       [
         {
+          name: '17',
+          series: [
+          {
+            name: 'France',
+            value: 400,
+            extra: {
+              code: 'fr'
+            }
+          },
+          {
+            name: 'Japan',
+            value: 600,
+            extra: {
+              code: 'jp'
+            }
+          }
+        ]
+        },
+        {
           name: '18',
           series: [
           {
@@ -989,6 +1027,25 @@ export const groupedStacked: GroupedStackedBarChartData = [
     name: 'Dezember',
     series: 
       [
+        {
+          name: '17',
+          series: [
+          {
+            name: 'France',
+            value: 400,
+            extra: {
+              code: 'fr'
+            }
+          },
+          {
+            name: 'Japan',
+            value: 600,
+            extra: {
+              code: 'jp'
+            }
+          }
+        ]
+        },
         {
           name: '18',
           series: [

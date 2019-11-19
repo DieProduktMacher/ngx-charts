@@ -70,7 +70,7 @@ import { BaseChartComponent } from '../common/base-chart.component';
           (dimensionsChanged)="updateYAxisWidth($event)"
         ></svg:g>
         <svg:g
-          *ngFor="let group of results; let index = index; trackBy: trackBy"
+          *ngFor="let group of results; let indexMain = index; trackBy: trackBy"
           [attr.transform]="groupTransform(group)"
         >
           <svg:g
@@ -84,7 +84,7 @@ import { BaseChartComponent } from '../common/base-chart.component';
               [activeEntries]="activeEntries"
               [xScale]="groupScale"
               [yScale]="valueScale"
-              [colors]="colors"
+              [colors]="getCustomColorhelper(indexMain, index)"
               [series]="stack.series"
               [dims]="dims"
               [gradient]="gradient"
@@ -329,12 +329,13 @@ export class BarVertical2DStackedComponent extends BaseChartComponent {
     for (const group of this.results) {
       for(const stack of group.series) {
         for (const d of stack.series) {
-          if (!domain.includes(d.label)) {
-            domain.push(d.label);
-          }
+          
+            domain.push(d.series);
+          
         }
       }
     }
+
     return domain;
   }
 
@@ -412,7 +413,26 @@ export class BarVertical2DStackedComponent extends BaseChartComponent {
       domain = this.valuesDomain;
     }
 
-    this.colors = new ColorHelper(this.scheme, this.schemeType, domain, this.customColors);
+    this.colors = new ColorHelper(this.scheme, this.schemeType, domain);
+  }
+
+  getCustomColorhelper(indexMain, index) {
+    const resultLength = this.results[indexMain].series[index].series.length;
+
+    let customScheme = {
+      domain: []
+    };
+
+    for (let i = 0; i < resultLength; i++) {
+
+      customScheme.domain.push(this.scheme.domain[index * resultLength + i]);
+    }
+
+    if (index === 0 ) {
+      customScheme.domain.reverse()
+    }
+
+    return new ColorHelper(customScheme, this.schemeType, this.innerDomain);
   }
 
   getLegendOptions() {
