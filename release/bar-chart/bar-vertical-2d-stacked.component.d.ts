@@ -79,6 +79,7 @@ export declare class BarVertical2DStackedComponent extends BaseChartComponent {
     onClick(data: any, group?: any): void;
     trackBy(index: any, item: any): any;
     setColors(): void;
+    getCustomColorhelper(indexMain: any, index: any): ColorHelper;
     getLegendOptions(): {
         scaleType: string;
         colors: any;
