@@ -1,8 +1,8 @@
 import {
   Component, Input, ChangeDetectionStrategy, Output, EventEmitter,
   SimpleChanges, OnChanges, ChangeDetectorRef, ViewEncapsulation
- } from '@angular/core';
-import { formatLabel } from '../label.helper';
+} from '@angular/core';
+import {formatLabel} from '../label.helper';
 
 @Component({
   selector: 'ngx-charts-legend',
@@ -13,8 +13,8 @@ import { formatLabel } from '../label.helper';
       </header>
       <div class="legend-wrap">
         <ul class="legend-labels"
-          [class.horizontal-legend]="horizontal"
-          [style.max-height.px]="height - 45">
+            [class.horizontal-legend]="horizontal"
+            [style.max-height.px]="height - 45">
           <li
             *ngFor="let entry of legendEntries; trackBy: trackBy"
             class="legend-label">
@@ -54,7 +54,8 @@ export class LegendComponent implements OnChanges {
 
   legendEntries: any[] = [];
 
-  constructor(private cd: ChangeDetectorRef) { }
+  constructor(private cd: ChangeDetectorRef) {
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.update();
@@ -69,7 +70,7 @@ export class LegendComponent implements OnChanges {
     const items = [];
     let counter = 0;
 
-    for(const label of this.data) {
+    for (const label of this.data) {
       const formattedLabel = formatLabel(label);
 
       let val = null;
@@ -98,7 +99,7 @@ export class LegendComponent implements OnChanges {
   }
 
   isActive(entry): boolean {
-    if(!this.activeEntries) return false;
+    if (!this.activeEntries) return false;
     const item = this.activeEntries.find(d => {
       return entry.label === d.name;
     });

@@ -8,12 +8,12 @@ import {
   ContentChild,
   TemplateRef
 } from '@angular/core';
-import { trigger, style, animate, transition } from '@angular/animations';
-import { scaleBand, scaleLinear } from 'd3-scale';
+import {trigger, style, animate, transition} from '@angular/animations';
+import {scaleBand, scaleLinear} from 'd3-scale';
 
-import { calculateViewDimensions, ViewDimensions } from '../common/view-dimensions.helper';
-import { ColorHelper } from '../common/color.helper';
-import { BaseChartComponent } from '../common/base-chart.component';
+import {calculateViewDimensions, ViewDimensions} from '../common/view-dimensions.helper';
+import {ColorHelper} from '../common/color.helper';
+import {BaseChartComponent} from '../common/base-chart.component';
 
 @Component({
   selector: 'ngx-charts-bar-vertical-2d-stacked',
@@ -74,8 +74,8 @@ import { BaseChartComponent } from '../common/base-chart.component';
           [attr.transform]="groupTransform(group)"
         >
           <svg:g
-          *ngFor="let stack of group.series; let index = index; trackBy: trackBy"
-          [@animationState]="'active'"
+            *ngFor="let stack of group.series; let index = index; trackBy: trackBy"
+            [@animationState]="'active'"
           >
             <svg:g
               ngx-charts-series-vertical
@@ -119,7 +119,7 @@ import { BaseChartComponent } from '../common/base-chart.component';
           opacity: 1,
           transform: '*'
         }),
-        animate(500, style({ opacity: 0, transform: 'scale(0)' }))
+        animate(500, style({opacity: 0, transform: 'scale(0)'}))
       ])
     ])
   ]
@@ -165,7 +165,7 @@ export class BarVertical2DStackedComponent extends BaseChartComponent {
   @Output() activate: EventEmitter<any> = new EventEmitter();
   @Output() deactivate: EventEmitter<any> = new EventEmitter();
 
-  @ContentChild('tooltipTemplate', { static: false }) tooltipTemplate: TemplateRef<any>;
+  @ContentChild('tooltipTemplate', {static: false}) tooltipTemplate: TemplateRef<any>;
 
   dims: ViewDimensions;
   groupDomain: any[];
@@ -186,13 +186,13 @@ export class BarVertical2DStackedComponent extends BaseChartComponent {
   xAxisHeight: number = 0;
   yAxisWidth: number = 0;
   legendOptions: any;
-  dataLabelMaxHeight: any = { negative: 0, positive: 0 };
+  dataLabelMaxHeight: any = {negative: 0, positive: 0};
 
   update(): void {
     super.update();
 
     if (!this.showDataLabel) {
-      this.dataLabelMaxHeight = { negative: 0, positive: 0 };
+      this.dataLabelMaxHeight = {negative: 0, positive: 0};
     }
     this.margin = [10 + this.dataLabelMaxHeight.positive, 20, 10 + this.dataLabelMaxHeight.negative, 20];
 
@@ -298,10 +298,8 @@ export class BarVertical2DStackedComponent extends BaseChartComponent {
 
   getGroupStackedDomain() {
     const domain = [];
-    
     for (const group of this.results) {
-      for(const stack of group.series) {
-
+      for (const stack of group.series) {
         if (!domain.includes(stack.label)) {
           domain.push(stack.label);
         }
@@ -327,11 +325,10 @@ export class BarVertical2DStackedComponent extends BaseChartComponent {
     const domain = [];
 
     for (const group of this.results) {
-      for(const stack of group.series) {
+      for (const stack of group.series) {
         for (const d of stack.series) {
-          
-            domain.push(d.series);
-          
+          domain.push(d.name);
+
         }
       }
     }
@@ -359,10 +356,10 @@ export class BarVertical2DStackedComponent extends BaseChartComponent {
     const domain = [];
     let smallest = 0;
     let biggest = 0;
-    
+
     for (const group of this.results) {
 
-      for(const stack of group.series) {
+      for (const stack of group.series) {
 
         let smallestSum = 0;
         let biggestSum = 0;
@@ -408,7 +405,7 @@ export class BarVertical2DStackedComponent extends BaseChartComponent {
   setColors(): void {
     let domain;
     if (this.schemeType === 'ordinal') {
-      domain = this.innerDomain;
+      domain = this.innerStackedDomain;
     } else {
       domain = this.valuesDomain;
     }
@@ -428,11 +425,7 @@ export class BarVertical2DStackedComponent extends BaseChartComponent {
       customScheme.domain.push(this.scheme.domain[index * resultLength + i]);
     }
 
-    if (index === 0 ) {
-      customScheme.domain.reverse()
-    }
-
-    return new ColorHelper(customScheme, this.schemeType, this.innerDomain);
+    return new ColorHelper(customScheme, this.schemeType, this.innerStackedDomain);
   }
 
   getLegendOptions() {
@@ -444,23 +437,22 @@ export class BarVertical2DStackedComponent extends BaseChartComponent {
       position: this.legendPosition
     };
     if (opts.scaleType === 'ordinal') {
-      opts.domain = this.innerDomain;
+      opts.domain = this.innerStackedDomain;
       opts.colors = this.colors;
       opts.title = this.legendTitle;
     } else {
       opts.domain = this.valuesDomain;
       opts.colors = this.colors.scale;
     }
-
     return opts;
   }
 
-  updateYAxisWidth({ width }) {
+  updateYAxisWidth({width}) {
     this.yAxisWidth = width;
     this.update();
   }
 
-  updateXAxisHeight({ height }) {
+  updateXAxisHeight({height}) {
     this.xAxisHeight = height;
     this.update();
   }
@@ -468,22 +460,24 @@ export class BarVertical2DStackedComponent extends BaseChartComponent {
   onActivate(event, group, fromLegend = false) {
     const item = Object.assign({}, event);
     if (group) {
+
       item.series = group.name;
     }
-
     const items = this.results
+      .map(g => g.series)
+      .flat()
       .map(g => g.series)
       .flat()
       .filter(i => {
         if (fromLegend) {
-          return i.label === item.name;
+          return i.name === item.name;
         } else {
-          return i.name === item.name && i.series === item.series;
+          return i.name === item.name;
         }
       });
 
     this.activeEntries = [...items];
-    this.activate.emit({ value: item, entries: this.activeEntries });
+    this.activate.emit({value: item.series, entries: this.activeEntries});
   }
 
   onDeactivate(event, group, fromLegend = false) {
@@ -500,6 +494,6 @@ export class BarVertical2DStackedComponent extends BaseChartComponent {
       }
     });
 
-    this.deactivate.emit({ value: item, entries: this.activeEntries });
+    this.deactivate.emit({value: item, entries: this.activeEntries});
   }
 }
