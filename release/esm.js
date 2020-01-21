@@ -9159,10 +9159,10 @@ var BarVertical2DStackedComponent = /** @class */ (function (_super) {
         }
         this.activeEntries = this.activeEntries.filter(function (i) {
             if (fromLegend) {
-                return i.label !== item.name;
+                return i.name !== item.name;
             }
             else {
-                return !(i.name === item.name && i.series === item.series);
+                return !(i.name === item.name);
             }
         });
         this.deactivate.emit({ value: item, entries: this.activeEntries });
