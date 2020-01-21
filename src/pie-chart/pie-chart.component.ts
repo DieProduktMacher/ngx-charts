@@ -56,12 +56,7 @@ import { DataItem } from '../models/chart-data.model';
     </ngx-charts-chart>
     
     <div class="totalValue"  *ngIf="doughnut" [ngStyle]="setMyStyles()">
-      <div 
-        *ngIf="animations"
-        class="item-value"
-        ngx-charts-count-up
-        [countTo]="totalNumber"
-      ></div>
+      <div>{{totalValue}}</div>
       <p>{{totalLabel}}</p>
     </div>
 
@@ -108,7 +103,6 @@ export class PieChartComponent extends BaseChartComponent {
   domain: any;
   dims: any;
   legendOptions: any;
-  totalNumber: any = 0;
   xOffset: number;
   yOffset: number;
   labelTranslationX: any;
@@ -138,7 +132,6 @@ export class PieChartComponent extends BaseChartComponent {
     });
 
     this.formatDates();
-    this.getTotalLabel();
 
     const xOffset = this.margins[3] + this.dims.width / 2;
     const yOffset = this.margins[0] + this.dims.height / 2;
@@ -183,18 +176,6 @@ export class PieChartComponent extends BaseChartComponent {
       transform: 'translate(' + (xOffset - this.labelWidth / 2) + 'px, ' + (yOffset - 30) + 'px)'
     };
     return styles;
-  }
-
-  getTotalLabel() {
-    if (this.totalValue) {
-      this.totalNumber = this.totalValue;
-    } else {
-      this.totalNumber = 0;
-
-      this.results.forEach(d => {
-        this.totalNumber = this.totalNumber + d.value;
-      });
-    }
   }
 
   getDomain(): any[] {
