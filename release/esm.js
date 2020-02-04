@@ -1511,25 +1511,6 @@ var LegendEntryComponent = /** @class */ (function () {
     return LegendEntryComponent;
 }());
 
-function trimLabel(s, max$$1) {
-    if (max$$1 === void 0) { max$$1 = 16; }
-    if (typeof s !== 'string') {
-        if (typeof s === 'number') {
-            return s + '';
-        }
-        else {
-            return '';
-        }
-    }
-    s = s.trim();
-    if (s.length <= max$$1) {
-        return s;
-    }
-    else {
-        return s.slice(0, max$$1) + "...";
-    }
-}
-
 var AdvancedLegendComponent = /** @class */ (function () {
     function AdvancedLegendComponent() {
         this.label = 'Total';
@@ -1567,7 +1548,7 @@ var AdvancedLegendComponent = /** @class */ (function () {
                 value: value,
                 color: color,
                 label: formattedLabel,
-                displayLabel: trimLabel(formattedLabel, 20),
+                displayLabel: formattedLabel,
                 origialLabel: d.name,
                 percentage: _this.percentageFormatting ? _this.percentageFormatting(percentage) : percentage.toLocaleString()
             };
@@ -1628,7 +1609,7 @@ var AdvancedLegendComponent = /** @class */ (function () {
     AdvancedLegendComponent = __decorate([
         Component({
             selector: 'ngx-charts-advanced-legend',
-            template: "\n    <div class=\"advanced-pie-legend\" [style.width.px]=\"width\" >\n      <div class=\"legend-items-container\">\n        <div class=\"legend-items\">\n          <div\n            *ngFor=\"let legendItem of legendItems; trackBy: trackBy\"\n            tabindex=\"-1\"\n            class=\"legend-item\"\n            (mouseenter)=\"activate.emit(legendItem.data)\"\n            (mouseleave)=\"deactivate.emit(legendItem.data)\"\n            (click)=\"select.emit(legendItem.data)\"\n          >\n            <div class=\"item-color\" [style.background]=\"legendItem.color\"></div>\n            <div>\n              <div class=\"item-label\">{{ legendItem.displayLabel }}</div>\n              <div\n                *ngIf=\"animations\"\n                class=\"item-value\"\n                ngx-charts-count-up\n                [countTo]=\"legendItem._value\"\n                [valueFormatting]=\"valueFormatting\"\n              ></div>\n              <div *ngIf=\"!animations\" class=\"item-value\">\n                {{ valueFormatting ? valueFormatting(legendItem.value) : defaultValueFormatting(legendItem.value) }}\n              </div>\n            </div>\n          </div>\n        </div>\n      </div>\n    </div>\n  ",
+            template: "\n    <div class=\"advanced-pie-legend\" [style.width.px]=\"width\" >\n      <div class=\"legend-items-container\">\n        <div class=\"legend-items\">\n          <div\n            *ngFor=\"let legendItem of legendItems; trackBy: trackBy\"\n            tabindex=\"-1\"\n            class=\"legend-item\"\n            (mouseenter)=\"activate.emit(legendItem.data)\"\n            (mouseleave)=\"deactivate.emit(legendItem.data)\"\n            (click)=\"select.emit(legendItem.data)\"\n          >\n            <div class=\"item-color\" [style.background]=\"legendItem.color\"></div>\n            <div>\n              <div class=\"item-label\">{{ legendItem.displayLabel }}</div>\n              <div\n                *ngIf=\"animations\"\n                class=\"item-value\"\n                ngx-charts-count-up\n                [countTo]=\"legendItem._value\"\n                [countDecimals]=\"2\"\n                [valueFormatting]=\"valueFormatting\"\n              ></div>\n              <div *ngIf=\"!animations\" class=\"item-value\">\n                {{ valueFormatting ? valueFormatting(legendItem.value) : defaultValueFormatting(legendItem.value) }}\n              </div>\n            </div>\n          </div>\n        </div>\n      </div>\n    </div>\n  ",
             styles: [".advanced-pie-legend{display:inline-block;position:relative}.advanced-pie-legend .total-value{font-size:36px}.advanced-pie-legend .total-label{font-size:24px;margin-bottom:19px}.advanced-pie-legend .legend-items-container{width:100%}.advanced-pie-legend .legend-items-container .legend-items{white-space:nowrap}.advanced-pie-legend .legend-items-container .legend-items .legend-item{position:relative;margin-right:0;cursor:pointer;display:block;padding-left:15px;margin-bottom:6px}.advanced-pie-legend .legend-items-container .legend-items .legend-item:focus{outline:0}.advanced-pie-legend .legend-items-container .legend-items .legend-item:hover{color:#000;-webkit-transition:.2s;-moz-transition:.2s;transition:.2s}.advanced-pie-legend .legend-items-container .legend-items .legend-item .item-value{font-size:14px;margin-top:-6px;margin-left:11px;color:#999}.advanced-pie-legend .legend-items-container .legend-items .legend-item .item-label{font-size:14px;opacity:.7;margin-left:11px;margin-top:-14px;color:#414141}.advanced-pie-legend .legend-items-container .legend-items .legend-item .item-color{position:absolute;top:9px;left:0;width:15px;height:15px;border-radius:50%}"],
             encapsulation: ViewEncapsulation.None,
             changeDetection: ChangeDetectionStrategy.OnPush
@@ -2178,6 +2159,25 @@ var AxisLabelComponent = /** @class */ (function () {
     ], AxisLabelComponent);
     return AxisLabelComponent;
 }());
+
+function trimLabel(s, max$$1) {
+    if (max$$1 === void 0) { max$$1 = 16; }
+    if (typeof s !== 'string') {
+        if (typeof s === 'number') {
+            return s + '';
+        }
+        else {
+            return '';
+        }
+    }
+    s = s.trim();
+    if (s.length <= max$$1) {
+        return s;
+    }
+    else {
+        return s.slice(0, max$$1) + "...";
+    }
+}
 
 function reduceTicks(ticks, maxTicks) {
     if (ticks.length > maxTicks) {

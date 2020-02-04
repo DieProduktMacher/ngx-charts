@@ -8,8 +8,7 @@ import {
   SimpleChanges,
   ViewEncapsulation
 } from '@angular/core';
-import { trimLabel } from '../trim-label.helper';
-import { formatLabel } from '../label.helper';
+import {formatLabel} from '../label.helper';
 
 @Component({
   selector: 'ngx-charts-advanced-legend',
@@ -33,6 +32,7 @@ import { formatLabel } from '../label.helper';
                 class="item-value"
                 ngx-charts-count-up
                 [countTo]="legendItem._value"
+                [countDecimals]="2"
                 [valueFormatting]="valueFormatting"
               ></div>
               <div *ngIf="!animations" class="item-value">
@@ -98,7 +98,7 @@ export class AdvancedLegendComponent implements OnChanges {
         value,
         color,
         label: formattedLabel,
-        displayLabel: trimLabel(formattedLabel, 20),
+        displayLabel: formattedLabel,
         origialLabel: d.name,
         percentage: this.percentageFormatting ? this.percentageFormatting(percentage) : percentage.toLocaleString()
       };
