@@ -33,7 +33,7 @@ import { id } from '../utils/id';
       (legendLabelDeactivate)="onDeactivate($event)"
     >
       <svg:defs>
-        <svg:clipPath *ngIf="clip" [attr.id]="clipPathId">
+        <svg:clipPath [attr.id]="clipPathId">
           <svg:rect
             [attr.width]="dims.width + 10"
             [attr.height]="dims.height + 10"
@@ -127,7 +127,6 @@ import { id } from '../utils/id';
 export class BubbleChartComponent extends BaseChartComponent {
   @Input() showGridLines: boolean = true;
   @Input() legend = false;
-  @Input() clip = false;
   @Input() legendTitle: string = 'Legend';
   @Input() legendPosition: string = 'right';
   @Input() xAxis: boolean = true;
