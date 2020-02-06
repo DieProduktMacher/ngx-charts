@@ -35,9 +35,9 @@ import {id} from '../utils/id';
       <svg:defs>
         <svg:clipPath [attr.id]="clipPathId">
           <svg:rect
-            [attr.width]="dims.width + 10"
-            [attr.height]="dims.height + 10"
-            [attr.transform]="'translate(-10,0)'"
+            [attr.width]="dims.width + 50"
+            [attr.height]="dims.height + 50"
+            [attr.transform]="'translate(-10)'"
           />
         </svg:clipPath>
       </svg:defs>
