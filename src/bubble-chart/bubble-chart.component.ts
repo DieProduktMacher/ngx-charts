@@ -9,15 +9,15 @@ import {
   ContentChild,
   TemplateRef
 } from '@angular/core';
-import { trigger, style, animate, transition } from '@angular/animations';
-import { scaleLinear } from 'd3-scale';
+import {trigger, style, animate, transition} from '@angular/animations';
+import {scaleLinear} from 'd3-scale';
 
-import { BaseChartComponent } from '../common/base-chart.component';
-import { calculateViewDimensions, ViewDimensions } from '../common/view-dimensions.helper';
-import { ColorHelper } from '../common/color.helper';
-import { getScaleType } from '../common/domain.helper';
-import { getDomain, getScale } from './bubble-chart.utils';
-import { id } from '../utils/id';
+import {BaseChartComponent} from '../common/base-chart.component';
+import {calculateViewDimensions, ViewDimensions} from '../common/view-dimensions.helper';
+import {ColorHelper} from '../common/color.helper';
+import {getScaleType} from '../common/domain.helper';
+import {getDomain, getScale} from './bubble-chart.utils';
+import {id} from '../utils/id';
 
 @Component({
   selector: 'ngx-charts-bubble-chart',
@@ -37,7 +37,7 @@ import { id } from '../utils/id';
           <svg:rect
             [attr.width]="dims.width + 10"
             [attr.height]="dims.height + 10"
-            [attr.transform]="'translate(-100, -100)'"
+            [attr.transform]="'translate(-10,0)'"
           />
         </svg:clipPath>
       </svg:defs>
@@ -158,7 +158,7 @@ export class BubbleChartComponent extends BaseChartComponent {
   @Output() activate: EventEmitter<any> = new EventEmitter();
   @Output() deactivate: EventEmitter<any> = new EventEmitter();
 
-  @ContentChild('tooltipTemplate', { static: false }) tooltipTemplate: TemplateRef<any>;
+  @ContentChild('tooltipTemplate', {static: false}) tooltipTemplate: TemplateRef<any>;
 
   dims: ViewDimensions;
   colors: ColorHelper;
@@ -371,12 +371,12 @@ export class BubbleChartComponent extends BaseChartComponent {
     return [min, max];
   }
 
-  updateYAxisWidth({ width }): void {
+  updateYAxisWidth({width}): void {
     this.yAxisWidth = width;
     this.update();
   }
 
-  updateXAxisHeight({ height }): void {
+  updateXAxisHeight({height}): void {
     this.xAxisHeight = height;
     this.update();
   }
@@ -390,7 +390,7 @@ export class BubbleChartComponent extends BaseChartComponent {
     }
 
     this.activeEntries = [item, ...this.activeEntries];
-    this.activate.emit({ value: item, entries: this.activeEntries });
+    this.activate.emit({value: item, entries: this.activeEntries});
   }
 
   onDeactivate(item): void {
@@ -401,13 +401,13 @@ export class BubbleChartComponent extends BaseChartComponent {
     this.activeEntries.splice(idx, 1);
     this.activeEntries = [...this.activeEntries];
 
-    this.deactivate.emit({ value: item, entries: this.activeEntries });
+    this.deactivate.emit({value: item, entries: this.activeEntries});
   }
 
   deactivateAll() {
     this.activeEntries = [...this.activeEntries];
     for (const entry of this.activeEntries) {
-      this.deactivate.emit({ value: entry, entries: [] });
+      this.deactivate.emit({value: entry, entries: []});
     }
     this.activeEntries = [];
   }
