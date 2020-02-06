@@ -37,7 +37,7 @@ import { id } from '../utils/id';
           <svg:rect
             [attr.width]="dims.width + 10"
             [attr.height]="dims.height + 10"
-            [attr.transform]="'translate(0, -5)'"
+            [attr.transform]="'translate(-100, -100)'"
           />
         </svg:clipPath>
       </svg:defs>
