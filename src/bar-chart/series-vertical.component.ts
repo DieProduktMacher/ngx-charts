@@ -222,7 +222,7 @@ export class SeriesVerticalComponent implements OnChanges {
       if (this.colors.scaleType === 'ordinal') {
         bar.color = this.colors.getColor(label);
 
-        if (this.stackNumber >= 1) {
+        if (this.stackNumber > 1) {
           bar.color = this.colors.colorDomain[0];
           
           if (index === this.series.length - 1) {

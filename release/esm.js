@@ -10178,7 +10178,7 @@ var SeriesVerticalComponent = /** @class */ (function () {
             }
             if (_this.colors.scaleType === 'ordinal') {
                 bar.color = _this.colors.getColor(label);
-                if (_this.stackNumber >= 1) {
+                if (_this.stackNumber > 1) {
                     bar.color = _this.colors.colorDomain[0];
                     if (index === _this.series.length - 1) {
                         bar.color = _this.colors.colorDomain[1];
