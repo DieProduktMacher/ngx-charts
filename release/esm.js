@@ -10912,7 +10912,7 @@ var BubbleChartComponent = /** @class */ (function (_super) {
         this.data = this.results;
         this.minRadius = Math.max(this.minRadius, 1);
         this.maxRadius = Math.max(this.maxRadius, 1);
-        this.rScale = this.getRScale(this.rDomain, [this.minRadius, this.maxRadius]);
+        this.rScale = this.getRScale(this.rDomain);
         this.bubblePadding = [0, 0, 0, 0];
         this.setScales();
         this.bubblePadding = this.getBubblePadding();
@@ -10970,7 +10970,12 @@ var BubbleChartComponent = /** @class */ (function (_super) {
     BubbleChartComponent.prototype.getXScale = function (domain, width) {
         return getScale(domain, [this.bubblePadding[3], width], this.xScaleType, this.roundDomains);
     };
-    BubbleChartComponent.prototype.getRScale = function (domain, range$$1) {
+    BubbleChartComponent.prototype.getRScale = function (domain) {
+        var range$$1 = domain;
+        if (domain[1] > this.maxRadius) {
+            var factor = this.maxRadius / domain[1];
+            range$$1 = [domain[0] * factor, domain[1] * factor];
+        }
         var scale = scaleLinear()
             .range(range$$1)
             .domain(domain);

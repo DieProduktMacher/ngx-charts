@@ -223,7 +223,7 @@ export class BubbleChartComponent extends BaseChartComponent {
     this.minRadius = Math.max(this.minRadius, 1);
     this.maxRadius = Math.max(this.maxRadius, 1);
 
-    this.rScale = this.getRScale(this.rDomain, [this.minRadius, this.maxRadius]);
+    this.rScale = this.getRScale(this.rDomain);
 
     this.bubblePadding = [0, 0, 0, 0];
     this.setScales();
@@ -297,7 +297,15 @@ export class BubbleChartComponent extends BaseChartComponent {
     return getScale(domain, [this.bubblePadding[3], width], this.xScaleType, this.roundDomains);
   }
 
-  getRScale(domain, range): any {
+  getRScale(domain): any {
+    /**
+     * Rescale bubbles correctly if radius is larger than max.
+     */
+    let range = domain;
+    if (domain[1] > this.maxRadius) {
+      const factor = this.maxRadius / domain [1];
+      range = [domain[0] * factor, domain[1] * factor];
+    }
     const scale = scaleLinear()
       .range(range)
       .domain(domain);
